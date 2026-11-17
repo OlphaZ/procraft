@@ -1,10 +1,12 @@
 name: CI
 
-# Run for pull requests and by hand (Actions > CI > Run workflow), not on every push to main. A
-# private copy pays for each minute, so there even a pull request's run skips every job.
+# Run for pull requests, pushes to main and by hand (Actions > CI > Run workflow). A private copy
+# pays for each minute, so pull request runs there skip every job; pushes and manual runs still build.
 # contributors' pull requests, and by hand (Actions > CI > Run workflow); not every push to main
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -22,7 +24,7 @@ env:
 jobs:
   rust:
     name: Rust (format, clippy, tests)
-    if: ${{ !github.event.repository.private || github.event_name == 'workflow_dispatch' }}
+    if: ${{ !github.event.repository.private || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +47,7 @@ jobs:
 
   android:
     name: Android (clippy, lint, unit tests, release APK)
-    if: ${{ !github.event.repository.private || github.event_name == 'workflow_dispatch' }}
+    if: ${{ !github.event.repository.private || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -92,3 +94,8 @@ jobs:
             done
           done
           echo "every library's segments are aligned to 16 KB"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: procraft-android-arm64
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error

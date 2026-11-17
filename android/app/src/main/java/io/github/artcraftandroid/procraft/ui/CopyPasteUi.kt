@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +54,7 @@ fun BoxScope.CopyPastePanel(vm: CanvasViewModel) {
             Box(Modifier.align(Alignment.TopCenter).padding(top = 5.dp).size(40.dp, 4.dp).clip(CircleShape).background(Color(0xFF7C7C7C)))
             Text("Copy & Paste", color = PanelTitleInk, fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.offset(x = 18.dp, y = 12.dp))
             Box(Modifier.offset(x = 453.dp, y = 6.dp).size(40.dp).clip(CircleShape).background(CloseFill).clickable { vm.copyPasteOpen = false }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.Cross, contentDescription = "Close", tint = ButtonInk, modifier = Modifier.size(18.dp))
+                Icon(PcIcons.Cross, contentDescription = UiLanguage.translate("Close"), tint = ButtonInk, modifier = Modifier.size(18.dp))
             }
             Row(Modifier.offset(y = 48.dp)) {
                 PanelButton(PcIcons.CopyCut, "Cut") { act(vm::cutLayer) }

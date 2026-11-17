@@ -33,7 +33,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -224,7 +223,7 @@ fun CanvasInfo(vm: CanvasViewModel) {
             }
             Spacer(Modifier.width(13.dp))
             Box(Modifier.size(44.dp, 45.dp).clip(CircleShape).background(DoneBlue).clickable { done() }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
         Column(Modifier.padding(start = if (wide) WideContentStart else 105.dp, end = if (wide) WideContentEnd else 24.dp, top = 100.dp).verticalScroll(rememberScrollState())) {
@@ -352,7 +351,7 @@ private fun Rows(rows: List<Pair<String, String>>, tall: Int = 50) {
             if (i > 0) Box(Modifier.fillMaxWidth().height(1.dp).background(ScreenFill))
             Row(Modifier.fillMaxWidth().height(tall.dp).padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(label, color = Ink, fontSize = 17.sp, maxLines = 1, modifier = Modifier.weight(1f))
-                Text(value, color = Ink, fontSize = 17.sp, maxLines = 1)
+                Text(value, translate = false, color = Ink, fontSize = 17.sp, maxLines = 1)
             }
         }
     }
@@ -366,8 +365,8 @@ private fun AboutCard(photo: ImageBitmap?, author: String, onAuthor: (String) ->
             Modifier.align(Alignment.TopCenter).padding(top = 30.dp).size(97.dp).clip(CircleShape).background(PhotoFill).clickable(onClick = onPhoto),
             contentAlignment = Alignment.Center,
         ) {
-            if (photo != null) Image(photo, contentDescription = "Author photo", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-            else Icon(PcIcons.Person, contentDescription = "Add a photo", tint = PhotoGlyph, modifier = Modifier.size(48.dp))
+            if (photo != null) Image(photo, contentDescription = UiLanguage.translate("Author photo"), contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+            else Icon(PcIcons.Person, contentDescription = UiLanguage.translate("Add a photo"), tint = PhotoGlyph, modifier = Modifier.size(48.dp))
         }
         Row(Modifier.align(Alignment.TopCenter).padding(top = 146.dp), verticalAlignment = Alignment.Bottom) {
             Text("Made by ", color = Ink, fontSize = 21.sp)
@@ -414,7 +413,7 @@ private fun AboutCard(photo: ImageBitmap?, author: String, onAuthor: (String) ->
             Text("Sign here", color = SignInk, fontSize = 11.sp, modifier = Modifier.offset(x = 50.dp, y = 90.dp))
             // always there, at the line's end
             Box(Modifier.offset(x = 330.dp, y = 58.dp).size(22.dp).clip(CircleShape).background(SignClear).clickable { signature.clear() }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.Cross, contentDescription = "Clear the signature", tint = CardFill, modifier = Modifier.size(14.dp))
+                Icon(PcIcons.Cross, contentDescription = UiLanguage.translate("Clear the signature"), tint = CardFill, modifier = Modifier.size(14.dp))
             }
         }
     }

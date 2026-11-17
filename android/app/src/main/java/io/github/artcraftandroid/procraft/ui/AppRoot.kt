@@ -6,7 +6,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -128,7 +127,7 @@ fun AppRoot(vm: CanvasViewModel) {
                         // its glyph is drawn wider than it is tall: 50 units shown 36.7 by 32
                         androidx.compose.foundation.Image(
                             androidx.compose.ui.graphics.vector.rememberVectorPainter(PcIcons.FullScreen),
-                            contentDescription = "Show the interface",
+                            contentDescription = UiLanguage.translate("Show the interface"),
                             contentScale = androidx.compose.ui.layout.ContentScale.FillBounds,
                             colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Pc.SideGlyph),
                             modifier = Modifier.offset(y = 0.3.dp).requiredSize(36.7.dp, 32.dp),

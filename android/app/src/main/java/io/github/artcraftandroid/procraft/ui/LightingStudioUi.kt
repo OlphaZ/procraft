@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -183,7 +182,7 @@ fun LightingStudio(vm: CanvasViewModel) {
                 }
                 Spacer(Modifier.width(13.dp))
                 Box(Modifier.size(44.dp, 45.dp).clip(CircleShape).background(DoneBlue).clickable { vm.closeLightingStudio(keep = true) }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                    Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
                 }
             }
         }

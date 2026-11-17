@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.dark(Color.TRANSPARENT), SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
+        io.github.artcraftandroid.procraft.ui.UiLanguage.load(this)
         // the log's file first, so that what follows is in it
         AppLog.start(this)
         // text's fonts given to the core, off the main thread
@@ -123,6 +124,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        io.github.artcraftandroid.procraft.ui.UiLanguage.load(this)
         vm.readAppSettings()
         vm.resumeTracking()
         vm.appInFront(true)

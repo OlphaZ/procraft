@@ -24,7 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Text
+import io.github.artcraftandroid.procraft.ui.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -58,6 +58,7 @@ import io.github.artcraftandroid.procraft.ui.fittedInterfaceSize
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        io.github.artcraftandroid.procraft.ui.UiLanguage.load(this)
         val prefs = getSharedPreferences("interface", Context.MODE_PRIVATE)
         val plugins = keptPlugins(this, prefs)
         Pc.accentGiven = Pc.accentOf(plugins)
@@ -139,6 +140,7 @@ private fun SettingsScreen(prefs: android.content.SharedPreferences, onDone: () 
                 Text("ProCraft", color = Ink, fontSize = 30.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
                 Text("Done", color = Blue, fontSize = 17.sp, modifier = Modifier.clickable(onClick = onDone).padding(8.dp))
             }
+            LanguageRow(prefs)
             for ((heading, rows) in Groups) {
                 Text(heading.uppercase(), color = Dim, fontSize = 13.sp, modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 6.dp))
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Group)) {
@@ -238,6 +240,36 @@ private fun ChoiceRow(prefs: android.content.SharedPreferences, s: Choice) {
     }
 }
 
+@Composable
+private fun LanguageRow(prefs: android.content.SharedPreferences) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var chosen by remember { mutableStateOf(prefs.getString("language", "system") ?: "system") }
+    var open by remember { mutableStateOf(false) }
+    val options = listOf("system" to "System default", "zh-CN" to "简体中文", "en" to "English")
+    Row(
+        Modifier.padding(top = 24.dp).fillMaxWidth().clip(RoundedCornerShape(12.dp))
+            .background(Group).clickable { open = true }.padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text("Language / 语言", color = Ink, fontSize = 17.sp, modifier = Modifier.weight(1f))
+        Box {
+            Text(options.firstOrNull { it.first == chosen }?.second ?: "System default", color = Dim, fontSize = 17.sp)
+            DropdownMenu(open, { open = false }, containerColor = Group) {
+                options.forEach { (tag, label) ->
+                    DropdownMenuItem(
+                        text = { Text(label, color = if (tag == chosen) Blue else Ink, fontSize = 17.sp) },
+                        onClick = {
+                            chosen = tag
+                            io.github.artcraftandroid.procraft.ui.UiLanguage.set(context, tag)
+                            open = false
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
 /**
  * The licences of what the app is made with: the interface font's and icons', then the third-party
  * software's (assets/licenses.txt, written by tools/licenses.py), a paragraph a row.
@@ -261,7 +293,7 @@ private fun Licences(onBack: () -> Unit) {
                 Text("‹ Settings", color = Blue, fontSize = 17.sp, modifier = Modifier.padding(top = 24.dp).clickable(onClick = onBack).padding(vertical = 8.dp))
                 Text("Licenses", color = Ink, fontSize = 30.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp, bottom = 16.dp))
             }
-            items(paragraphs.size) { i -> Text(paragraphs[i], color = Dim, fontSize = 13.sp, modifier = Modifier.padding(bottom = 12.dp)) }
+            items(paragraphs.size) { i -> Text(paragraphs[i], translate = false, color = Dim, fontSize = 13.sp, modifier = Modifier.padding(bottom = 12.dp)) }
         }
     }
 }

@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
@@ -195,7 +194,7 @@ private fun CropSettings(vm: CanvasViewModel, modifier: Modifier) {
             Row(Modifier.padding(top = 10.dp).fillMaxWidth().height(44.dp).padding(horizontal = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                 NumberField(w.toString(), "px", Modifier.width(137.dp)) { it.toIntOrNull()?.let { v -> vm.changeCropSize(v, null) } }
                 Box(Modifier.padding(horizontal = 8.dp).size(34.dp, 40.dp).clickable { vm.changeCropAspectLocked(!vm.cropAspectLocked) }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.Link, contentDescription = "Aspect lock", tint = if (vm.cropAspectLocked) Pc.Accent else SettingsInk, modifier = Modifier.size(20.dp))
+                    Icon(PcIcons.Link, contentDescription = UiLanguage.translate("Aspect lock"), tint = if (vm.cropAspectLocked) Pc.Accent else SettingsInk, modifier = Modifier.size(20.dp))
                 }
                 NumberField(h.toString(), "px", Modifier.width(137.dp)) { it.toIntOrNull()?.let { v -> vm.changeCropSize(null, v) } }
             }

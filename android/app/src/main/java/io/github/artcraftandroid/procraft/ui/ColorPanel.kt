@@ -36,7 +36,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -274,7 +273,7 @@ fun ColorPanel(vm: CanvasViewModel, arrowX: Dp, screenHeight: Dp, modifier: Modi
                         Modifier.padding(top = 19.dp).size(44.dp).clip(CircleShape).background(Pc.Accent).clickable { vm.endBackgroundPick() },
                         contentAlignment = Alignment.Center,
                     ) {
-                        Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                        Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
                     }
                 }
             } else if (vm.colorMode == ColorMode.PALETTES) {
@@ -313,7 +312,7 @@ fun ColorPanel(vm: CanvasViewModel, arrowX: Dp, screenHeight: Dp, modifier: Modi
                 History(vm, c)
                 vm.palettes.getOrNull(vm.defaultPalette)?.let { p ->
                     Box(Modifier.fillMaxWidth().height(44.dp)) {
-                        Text(p.name, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 21.dp, top = 13.dp))
+                        Text(p.name, translate = false, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 21.dp, top = 13.dp))
                     }
                     SwatchGrid(vm, c, vm.defaultPalette, p, Modifier.padding(horizontal = 8.dp))
                 }
@@ -537,7 +536,7 @@ private fun FloatingPalettes(vm: CanvasViewModel, c: ColorPick) {
                 Row(Modifier.fillMaxWidth().height(44.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (i == vm.defaultPalette) {
                         Box(Modifier.padding(start = 8.5.dp).size(21.dp).clip(CircleShape).background(Pc.Accent), contentAlignment = Alignment.Center) {
-                            Icon(PcIcons.Tick, contentDescription = "Default", tint = Color.White, modifier = Modifier.size(13.dp))
+                            Icon(PcIcons.Tick, contentDescription = UiLanguage.translate("Default"), tint = Color.White, modifier = Modifier.size(13.dp))
                         }
                     }
                     Text(
@@ -1270,7 +1269,7 @@ private fun Palettes(vm: CanvasViewModel, c: ColorPick, listHeight: Dp) {
                 Row(Modifier.fillMaxWidth().height(44.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (i == vm.defaultPalette) {
                         Box(Modifier.padding(start = 11.5.dp).size(20.dp).clip(CircleShape).background(Pc.Accent), contentAlignment = Alignment.Center) {
-                            Icon(PcIcons.Tick, contentDescription = "Default", tint = Color.White, modifier = Modifier.size(14.dp))
+                            Icon(PcIcons.Tick, contentDescription = UiLanguage.translate("Default"), tint = Color.White, modifier = Modifier.size(14.dp))
                         }
                     }
                     // a tap on the name renames it in place
@@ -1281,7 +1280,7 @@ private fun Palettes(vm: CanvasViewModel, c: ColorPick, listHeight: Dp) {
                                 renaming = null
                             }
                         } else {
-                            Text(p.name, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.clickable { renaming = i })
+                            Text(p.name, translate = false, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.clickable { renaming = i })
                         }
                     }
                     PaletteMenu(vm, i)
@@ -1304,7 +1303,7 @@ private fun PaletteMenu(vm: CanvasViewModel, i: Int) {
     // the menu's right edge 5 left of the button, its top 25 below the button's (2.5 below its middle)
     val (gap, drop) = with(androidx.compose.ui.platform.LocalDensity.current) { 5.dp.roundToPx() to 25.dp.roundToPx() }
     Box(Modifier.padding(end = 8.5.dp).size(30.dp, 44.dp).clickable { open = true }, contentAlignment = Alignment.Center) {
-        Icon(PcIcons.More, contentDescription = "More", tint = Pc.PanelTitle, modifier = Modifier.size(20.dp))
+        Icon(PcIcons.More, contentDescription = UiLanguage.translate("More"), tint = Pc.PanelTitle, modifier = Modifier.size(20.dp))
         LibraryMenu(open, androidx.compose.ui.graphics.TransformOrigin(1f, 0f), MenuPlace { a, size -> IntOffset(a.left - gap - size.width, a.top + drop) }, onDismiss = { open = false }, overPanel = true) {
             if (vm.defaultPalette != i) {
                 MenuItem(PcIcons.MenuCheckCircle, "Set as active") {
@@ -1355,7 +1354,7 @@ private fun NewPaletteButton(vm: CanvasViewModel) {
         uri?.let(vm::paletteFromImage)
     }
     Box(Modifier.padding(top = 12.dp).size(40.dp, 41.dp).clickable { open = true }, contentAlignment = Alignment.Center) {
-        Icon(PcIcons.PlusMedium, contentDescription = "New palette", tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
+        Icon(PcIcons.PlusMedium, contentDescription = UiLanguage.translate("New palette"), tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
         LibraryMenu(open, androidx.compose.ui.graphics.TransformOrigin(1f, 0f), MenuPlace { a, size -> IntOffset(a.left - size.width, a.bottom) }, onDismiss = { open = false }, overPanel = true) {
             MenuItem(PcIcons.MenuGrid, "Create new palette") {
                 open = false
@@ -1708,7 +1707,7 @@ private fun HexPad(onKey: (Char) -> Unit, onBack: () -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             HexKey(Modifier.width(158.dp), { onKey('0') }) { Text("0", color = HexKeyInk, fontSize = 21.sp) }
             HexKey(Modifier.width(77.dp), onBack) {
-                Icon(PcIcons.HexBackspace, contentDescription = "Delete", tint = HexBackInk, modifier = Modifier.size(24.dp))
+                Icon(PcIcons.HexBackspace, contentDescription = UiLanguage.translate("Delete"), tint = HexBackInk, modifier = Modifier.size(24.dp))
             }
         }
     }

@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -200,7 +199,7 @@ fun CustomCanvasScreen(vm: CanvasViewModel, onMade: () -> Unit) {
             }
             Spacer(Modifier.width(13.dp))
             Box(Modifier.size(44.dp, 45.dp).clip(CircleShape).background(DoneBlue).clickable { create() }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.DoneTick, contentDescription = "Create", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Create"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
         Column(Modifier.padding(start = 372.dp, end = 32.dp, top = 120.dp)) {

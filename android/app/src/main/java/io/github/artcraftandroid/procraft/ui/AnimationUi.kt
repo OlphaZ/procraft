@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -342,7 +341,7 @@ private fun ColumnScope.OnionColorsPage(vm: CanvasViewModel, onBack: () -> Unit)
     // the back button at the panel's very edge
     Row(Modifier.offset(x = (-8).dp).fillMaxWidth().height(34.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(44.dp, 34.dp).clickable(onClick = onBack), contentAlignment = Alignment.Center) {
-            Icon(PcIcons.ChevronLeft, contentDescription = "Back", tint = Pc.SlideValue, modifier = Modifier.requiredSize(34.dp))
+            Icon(PcIcons.ChevronLeft, contentDescription = UiLanguage.translate("Back"), tint = Pc.SlideValue, modifier = Modifier.requiredSize(34.dp))
         }
         Text("Colors", color = Pc.PanelTitle, fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
         Text(

@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -201,7 +200,7 @@ private fun ReferenceWindowContent(vm: CanvasViewModel) {
                         Modifier.size(43.dp).clip(CircleShape).background(CloseFill).border(1.dp, CloseEdge, CircleShape).clickable { vm.changeReferenceOn(false) },
                         contentAlignment = Alignment.Center,
                     ) {
-                        Icon(PcIcons.Cross, contentDescription = "Close", tint = CloseInk, modifier = Modifier.size(20.dp))
+                        Icon(PcIcons.Cross, contentDescription = UiLanguage.translate("Close"), tint = CloseInk, modifier = Modifier.size(20.dp))
                     }
                 }
             }

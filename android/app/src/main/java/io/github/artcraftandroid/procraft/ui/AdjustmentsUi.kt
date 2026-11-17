@@ -26,7 +26,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -112,7 +111,7 @@ fun AdjustmentsPanel(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modif
             // turned to the filters, the way back is the panels' own, the title beside it
             Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 8.dp, top = 17.dp, bottom = 1.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(44.dp, 34.dp).clickable { showFilters = false }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.ChevronLeft, contentDescription = "Back", tint = Pc.PanelTitle, modifier = Modifier.size(22.dp))
+                    Icon(PcIcons.ChevronLeft, contentDescription = UiLanguage.translate("Back"), tint = Pc.PanelTitle, modifier = Modifier.size(22.dp))
                 }
                 Text("Plugins", color = Pc.PanelTitle, fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1)
             }
@@ -562,12 +561,12 @@ fun GradientMapPanel(vm: CanvasViewModel, modifier: Modifier = Modifier) {
             Text(if (editing != null) "Gradient Map" else "Gradient Library", color = MenuText, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, modifier = Modifier.weight(1f).padding(start = 14.dp))
             if (editing != null) {
                 Box(Modifier.size(40.dp).clip(androidx.compose.foundation.shape.CircleShape).background(GradientDone).tap { vm.endGradientEdit() }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(36.dp))
+                    Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(36.dp))
                 }
             } else {
                 val disc = androidx.compose.foundation.shape.CircleShape
                 Box(Modifier.size(40.dp).clip(disc).background(PlusDisc).border(1.dp, PlusRim, disc).tap { vm.newGradient() }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.Add, contentDescription = "New gradient", tint = PlusGlyph, modifier = Modifier.requiredSize(34.dp))
+                    Icon(PcIcons.Add, contentDescription = UiLanguage.translate("New gradient"), tint = PlusGlyph, modifier = Modifier.requiredSize(34.dp))
                 }
             }
         }

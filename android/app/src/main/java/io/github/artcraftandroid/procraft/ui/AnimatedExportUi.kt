@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -128,7 +127,7 @@ fun AnimatedExport(vm: CanvasViewModel, format: CanvasViewModel.Animated) {
                     shown = (shown + 1) % frames.size
                 }
             }
-            frames.getOrNull(shown)?.let { Image(it.asImageBitmap(), contentDescription = "Preview", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize()) }
+            frames.getOrNull(shown)?.let { Image(it.asImageBitmap(), contentDescription = UiLanguage.translate("Preview"), contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize()) }
         },
     ) {
         Segments(listOf("Max Resolution", "Web Ready"), if (webReady) 1 else 0) { webReady = it == 1 }
@@ -203,7 +202,7 @@ private fun ExportScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 // while it exports the card over the screen shows how far it has come
-                Icon(PcIcons.DoneTick, contentDescription = "Export", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Export"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
         if (wide || settingsOpen) {
@@ -265,7 +264,7 @@ fun ModelAnimatedExport(vm: CanvasViewModel, format: CanvasViewModel.Animated) {
                     shown = (shown + 1) % frames.size
                 }
             }
-            frames.getOrNull(shown)?.let { Image(it.asImageBitmap(), contentDescription = "Preview", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize()) }
+            frames.getOrNull(shown)?.let { Image(it.asImageBitmap(), contentDescription = UiLanguage.translate("Preview"), contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize()) }
         },
     ) {
         val t = vm.turntable

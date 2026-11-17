@@ -40,7 +40,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -116,7 +115,7 @@ private val PickReach = 72.dp
 @Composable
 private fun BrushName(name: String, selected: Boolean, shaded: Boolean, modifier: Modifier) {
     Text(
-        name,
+        name, translate = false,
         color = if (selected) Color.White else Pc.PanelTitle,
         fontSize = 14.sp,
         fontWeight = FontWeight.SemiBold,
@@ -352,7 +351,7 @@ fun BrushLibrary(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier)
                     Text("Delete", color = SwipeInk, fontSize = 15.sp, maxLines = 1)
                 }
             } else Box(Modifier.padding(top = 12.dp).size(41.dp, 40.dp).clickable { adding = true }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.PlusMedium, contentDescription = "Add", tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
+                Icon(PcIcons.PlusMedium, contentDescription = UiLanguage.translate("Add"), tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
                 // hangs below the plus, their right edges in line
                 LibraryMenu(adding, androidx.compose.ui.graphics.TransformOrigin(1f, 0f), MenuPlace { a, size -> IntOffset(a.right - size.width, a.bottom) }, onDismiss = { adding = false }, overPanel = true) {
                     // the Recent set holds no brushes of its own to add one to
@@ -464,7 +463,7 @@ fun BrushLibrary(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier)
                                 InlineName(set.name, ink, 14.sp, nameModifier) { vm.renameBrushSet(i, it) }
                             } else {
                                 Text(
-                                    set.name,
+                                    set.name, translate = false,
                                     color = ink,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
@@ -654,7 +653,7 @@ fun BrushLibrary(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier)
                                     // a pinned brush's mark, at the cell's top right
                                     if (pinned) {
                                         Icon(
-                                            PcIcons.PinMark, contentDescription = "Pinned", tint = if (selected) Color.White else Pc.PanelTitle,
+                                            PcIcons.PinMark, contentDescription = UiLanguage.translate("Pinned"), tint = if (selected) Color.White else Pc.PanelTitle,
                                             modifier = Modifier.align(Alignment.TopEnd).padding(top = 12.5.dp, end = 11.dp).requiredSize(16.dp),
                                         )
                                     }
@@ -678,7 +677,7 @@ fun BrushLibrary(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier)
                     vm.previews["${d.set}-${d.index}"]?.let {
                         Image(it, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
                     }
-                    Text(d.name, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 18.dp, top = 11.dp))
+                    Text(d.name, translate = false, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 18.dp, top = 11.dp))
                 }
             }
             // and the dragged set
@@ -693,7 +692,7 @@ fun BrushLibrary(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier)
                 ) {
                     Icon(PcIcons.SetIcons.getOrElse(set.icon.toInt()) { PcIcons.BrushSet }, contentDescription = null, tint = Color.White, modifier = Modifier.padding(start = 4.dp).requiredSize(40.dp))
                     Text(
-                        set.name,
+                        set.name, translate = false,
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -918,7 +917,7 @@ private fun LibrariesPanel(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier) 
             },
         ) {
             Box(Modifier.padding(top = 12.dp).size(41.dp, 40.dp).clickable { adding = true }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.PlusMedium, contentDescription = "Add", tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
+                Icon(PcIcons.PlusMedium, contentDescription = UiLanguage.translate("Add"), tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
                 LibraryMenu(adding, androidx.compose.ui.graphics.TransformOrigin(1f, 0f), MenuPlace { a, size -> IntOffset(a.right - size.width, a.bottom) }, onDismiss = { adding = false }, overPanel = true) {
                     if (showing) {
                         MenuItem(PcIcons.MenuNewLibrary, "Create new library") {
@@ -1015,7 +1014,7 @@ private fun LibraryCard(vm: CanvasViewModel, i: Int, library: io.github.artcraft
         if (vm.renamingLibrary == i) {
             InlineName(library.name, Pc.PanelTitle, 14.sp) { vm.renameLibrary(i, it) }
         } else {
-            Text(library.name, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(library.name, translate = false, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         // the one in use's shown set; another's first with a brush chosen in it
         val chosen = if (library.current) vm.shownSet else library.sets.indexOfFirst { it.chosen != null }.coerceAtLeast(0)
@@ -1029,7 +1028,7 @@ private fun LibraryCard(vm: CanvasViewModel, i: Int, library: io.github.artcraft
                     ) {
                         val ink = if (s == chosen) Color.White else Pc.PanelTitle
                         Icon(PcIcons.SetIcons.getOrElse(set.icon.toInt()) { PcIcons.BrushSet }, contentDescription = null, tint = ink, modifier = Modifier.requiredSize(18.dp))
-                        Text(set.name, color = ink, fontSize = 8.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(set.name, translate = false, color = ink, fontSize = 8.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 }
             }
@@ -1041,7 +1040,7 @@ private fun LibraryCard(vm: CanvasViewModel, i: Int, library: io.github.artcraft
                     LaunchedEffect(key, stroke == null) { if (stroke == null) vm.loadCardPreview(i, b.set.toInt(), b.index.toInt()) }
                     Box(Modifier.fillMaxWidth().height(CardBrushHeight)) {
                         stroke?.let { androidx.compose.foundation.Image(it, contentDescription = null, contentScale = androidx.compose.ui.layout.ContentScale.FillBounds, modifier = Modifier.fillMaxSize()) }
-                        Text(b.name, color = Pc.PanelTitle, fontSize = 8.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(start = 3.dp, top = 1.dp))
+                        Text(b.name, translate = false, color = Pc.PanelTitle, fontSize = 8.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(start = 3.dp, top = 1.dp))
                     }
                 }
             }

@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -769,7 +768,7 @@ private fun StudioPad(vm: CanvasViewModel, modifier: Modifier) {
             }
             Spacer(Modifier.width(13.dp))
             Box(Modifier.size(44.dp).clip(CircleShape).background(StudioDone).tap { vm.closeStudio(keep = true) }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
     }
@@ -912,7 +911,7 @@ private fun StudioControlView(vm: CanvasViewModel, c: StudioControl) {
                     .padding(horizontal = 17.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                Text(vm.studioName, color = PreviewCardName, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
+                Text(vm.studioName, translate = false, color = PreviewCardName, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false)
             }
         }
         StudioControl.About -> AboutBrush(vm)
@@ -925,7 +924,7 @@ private fun StudioControlView(vm: CanvasViewModel, c: StudioControl) {
 private fun BrushNameHeading(vm: CanvasViewModel) {
     var renaming by remember { mutableStateOf(false) }
     if (!renaming) {
-        Text(vm.studioName, color = StudioHeader, fontSize = 21.sp, fontWeight = FontWeight.Bold, maxLines = 1, modifier = Modifier.padding(start = 8.dp).tap { renaming = true })
+        Text(vm.studioName, translate = false, color = StudioHeader, fontSize = 21.sp, fontWeight = FontWeight.Bold, maxLines = 1, modifier = Modifier.padding(start = 8.dp).tap { renaming = true })
         return
     }
     // the keyboard put away ends it, the name as typed
@@ -1490,7 +1489,7 @@ private fun KeypadTilt(extras: KeypadExtras) {
 private fun KeypadKey(label: String, width: Dp, height: Dp = 66.dp, onClick: () -> Unit) {
     Box(Modifier.size(width, height).clip(RoundedCornerShape(12.dp)).background(KeypadKey).tap(onClick = onClick), contentAlignment = Alignment.Center) {
         if (label == "⌫") {
-            Icon(PcIcons.Backspace, contentDescription = "Back space", tint = KeypadInk, modifier = Modifier.size(26.dp))
+            Icon(PcIcons.Backspace, contentDescription = UiLanguage.translate("Back space"), tint = KeypadInk, modifier = Modifier.size(26.dp))
         } else {
             Text(label, color = KeypadInk, fontSize = 29.sp)
         }

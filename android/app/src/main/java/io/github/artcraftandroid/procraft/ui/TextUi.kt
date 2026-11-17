@@ -30,7 +30,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -392,7 +391,7 @@ private fun TextStyleSheet(vm: CanvasViewModel, info: TextInfo) {
             }
             Spacer(Modifier.width(13.dp))
             Box(Modifier.size(44.dp, 45.dp).clip(CircleShape).background(DoneBlue).clickable { vm.endText(true) }, contentAlignment = Alignment.Center) {
-                Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
         // wide (landscape), the four cards side by side; narrow, Typeface or Design, switched below
@@ -561,7 +560,7 @@ private fun Cell(name: String, selected: Boolean, face: android.graphics.Typefac
         Modifier.fillMaxWidth().height(33.dp).background(if (selected) Pc.Accent else Color.Transparent).clickable(onClick = onClick).padding(start = 12.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
-        Text(name, color = if (selected) Color.White else SheetInk, fontSize = 15.sp, fontFamily = family, maxLines = 1)
+        Text(name, translate = false, color = if (selected) Color.White else SheetInk, fontSize = 15.sp, fontFamily = family, maxLines = 1)
     }
 }
 

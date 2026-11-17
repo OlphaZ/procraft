@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -162,7 +161,7 @@ fun GuideEditor(vm: CanvasViewModel) {
                 }
                 Spacer(Modifier.width(13.dp))
                 Box(Modifier.size(44.dp).clip(CircleShape).background(GuideDone).tap { vm.closeGuideEditor(keep = true) }, contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                    Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
                 }
             }
         }

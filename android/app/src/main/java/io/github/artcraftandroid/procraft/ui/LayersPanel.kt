@@ -39,7 +39,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -198,7 +197,7 @@ fun LayersPanel(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier) 
                 Modifier.padding(top = 12.dp).size(40.dp, 41.dp).clickable { if (kinds.isEmpty()) vm.addLayer() else addMenu = true },
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(PcIcons.PlusMedium, contentDescription = "New layer", tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
+                Icon(PcIcons.PlusMedium, contentDescription = UiLanguage.translate("New layer"), tint = Pc.PanelGlyph, modifier = Modifier.requiredSize(41.dp))
                 NewLayerMenu(addMenu && kinds.isNotEmpty(), kinds, vm, onDismiss = { addMenu = false })
             }
         }
@@ -341,7 +340,7 @@ fun LayersPanel(vm: CanvasViewModel, arrowX: Dp, modifier: Modifier = Modifier) 
                                 renaming = null
                             }
                         } else {
-                            Text(l.name, color = ink, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = m)
+                            Text(l.name, translate = false, color = ink, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = m)
                         }
                     }
                     SwipeRow(vm, l, open = swiped == l.id, enabled = dragId == null, onOpen = { swiped = if (it) l.id else null }, onPick = { vm.pickLayer(l) }) {
@@ -689,7 +688,7 @@ internal fun PanelHeader(
 private fun LockedName(l: LayerInfo, ink: Color, name: @Composable (Color, Modifier) -> Unit, modifier: Modifier) {
     Box(modifier, contentAlignment = Alignment.CenterStart) {
         // the padlock's glyph ends 12 short of the name
-        if (l.locked) Icon(PcIcons.LockRow, contentDescription = "Locked", tint = ink, modifier = Modifier.offset(x = 3.dp).size(17.dp))
+        if (l.locked) Icon(PcIcons.LockRow, contentDescription = UiLanguage.translate("Locked"), tint = ink, modifier = Modifier.offset(x = 3.dp).size(17.dp))
         name(ink, Modifier.padding(start = 29.dp, end = 6.dp))
     }
 }
@@ -751,7 +750,7 @@ private fun LayerRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val ink = if (selected || l.picked) Color.White else Pc.PanelTitle
-        if (l.clipped) Icon(PcIcons.Clip, contentDescription = "Clipped", tint = ink, modifier = Modifier.size(16.dp))
+        if (l.clipped) Icon(PcIcons.Clip, contentDescription = UiLanguage.translate("Clipped"), tint = ink, modifier = Modifier.size(16.dp))
         // a mask's thumbnail and its layer's join into one, rounded only at the outer corners
         val corner = 4.dp
         val thumbShape = when {
@@ -788,7 +787,7 @@ private fun LayerRow(
             Spacer(Modifier.width(10.dp))
             Box(Modifier.width(12.dp).height(47.dp), contentAlignment = Alignment.Center) {
                 Box(Modifier.requiredSize(44.dp, 47.dp).clickable(onClick = onCube), contentAlignment = Alignment.Center) {
-                    Icon(PcIcons.Tab3D, contentDescription = "Channels", tint = if (cubeLit) Pc.Accent else ink, modifier = Modifier.requiredSize(48.dp))
+                    Icon(PcIcons.Tab3D, contentDescription = UiLanguage.translate("Channels"), tint = if (cubeLit) Pc.Accent else ink, modifier = Modifier.requiredSize(48.dp))
                 }
             }
         }
@@ -1184,7 +1183,7 @@ private fun SetHeader(name: String, first: Boolean) {
     Column {
         if (!first) Spacer(Modifier.height(16.dp))
         Box(Modifier.fillMaxWidth().height(41.dp), contentAlignment = Alignment.TopStart) {
-            Text(name, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 16.dp, top = 12.dp))
+            Text(name, translate = false, color = Pc.PanelTitle, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(start = 16.dp, top = 12.dp))
         }
     }
 }
@@ -1245,8 +1244,8 @@ private fun SubmeshRow(vm: CanvasViewModel, index: Int, name: String, open: Bool
         Box(Modifier.padding(start = 4.dp).size(93.dp, 61.dp).clip(RoundedCornerShape(4.dp)).background(SubmeshTile), contentAlignment = Alignment.Center) {
             vm.submeshThumbnails[index]?.let { Image(it, contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize().padding(4.dp)) }
         }
-        Text(name, color = Pc.PanelTitle, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(start = 29.dp, end = 6.dp))
-        if (locked) Icon(PcIcons.PageLocked, contentDescription = "Locked", tint = Pc.PanelTitle, modifier = Modifier.size(16.dp))
+        Text(name, translate = false, color = Pc.PanelTitle, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(start = 29.dp, end = 6.dp))
+        if (locked) Icon(PcIcons.PageLocked, contentDescription = UiLanguage.translate("Locked"), tint = Pc.PanelTitle, modifier = Modifier.size(16.dp))
         Box(Modifier.offset(x = 8.dp).size(44.dp, 51.dp).clickable { vm.openSubmesh(index) }, contentAlignment = Alignment.Center) {
             Icon(if (open) PcIcons.ChevronDown else PcIcons.ChevronRight, contentDescription = if (open) "Close" else "Open", tint = Pc.PanelTitle, modifier = Modifier.size(16.dp))
         }

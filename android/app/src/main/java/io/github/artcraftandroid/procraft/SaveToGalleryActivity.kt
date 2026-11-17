@@ -31,13 +31,14 @@ class SaveToGalleryActivity : ComponentActivity() {
         if (granted) {
             save()
         } else {
-            Toast.makeText(applicationContext, "Couldn't save to Gallery without storage access", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, io.github.artcraftandroid.procraft.ui.UiLanguage.translate("Couldn't save to Gallery without storage access"), Toast.LENGTH_LONG).show()
             finish()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        io.github.artcraftandroid.procraft.ui.UiLanguage.load(this)
         if (savedInstanceState != null) return
         when {
             files.isEmpty() -> finish()
@@ -64,7 +65,7 @@ class SaveToGalleryActivity : ComponentActivity() {
                     saved == 0 -> "Couldn't save to Gallery"
                     else -> "Saved $saved of ${files.size} to Gallery"
                 }
-                Toast.makeText(app, text, if (saved == files.size) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
+                Toast.makeText(app, io.github.artcraftandroid.procraft.ui.UiLanguage.translate(text), if (saved == files.size) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
                 finish()
             }
         }

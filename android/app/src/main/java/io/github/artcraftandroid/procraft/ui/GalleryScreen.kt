@@ -41,7 +41,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -470,7 +469,7 @@ fun GalleryScreen(vm: CanvasViewModel) {
                                         }
                                     }
                                     Text(
-                                        a.name,
+                                        a.name, translate = false,
                                         color = if (selecting && chosen) Color.White else Pc.GalleryText,
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.SemiBold,
@@ -754,9 +753,9 @@ private fun GalleryHeader(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(Modifier.width(40.dp), contentAlignment = Alignment.Center) {
-                        Icon(PcIcons.ChevronLeft, contentDescription = "Back", tint = ink, modifier = Modifier.size(28.dp))
+                        Icon(PcIcons.ChevronLeft, contentDescription = UiLanguage.translate("Back"), tint = ink, modifier = Modifier.size(28.dp))
                     }
-                    Text(name, color = ink, fontSize = 36.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                    Text(name, translate = false, color = ink, fontSize = 36.sp, fontWeight = FontWeight.Bold, maxLines = 1)
                 }
             } else {
                 Text(
@@ -787,7 +786,7 @@ private fun GalleryHeader(
             }
             Box(Modifier.padding(start = 12.dp).size(44.dp, 45.dp).clickable(onClick = onNew), contentAlignment = Alignment.Center) {
                 Box(Modifier.size(42.dp).clip(CircleShape).background(Pc.Capsule).border(1.dp, Pc.CapsuleEdge, CircleShape))
-                Icon(PcIcons.Add, contentDescription = "New canvas", tint = Pc.GalleryText, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.Add, contentDescription = UiLanguage.translate("New canvas"), tint = Pc.GalleryText, modifier = Modifier.requiredSize(40.dp))
             }
         }
     }
@@ -839,7 +838,7 @@ private fun SelectHeader(
                 }
             }
             Box(Modifier.padding(start = 13.dp).size(44.dp, 45.dp).clip(CircleShape).background(Pc.tinted(Color(0xFF0190FF))).clickable(onClick = onDone), contentAlignment = Alignment.Center) {
-                Icon(PcIcons.DoneTick, contentDescription = "Done", tint = Color.White, modifier = Modifier.requiredSize(40.dp))
+                Icon(PcIcons.DoneTick, contentDescription = UiLanguage.translate("Done"), tint = Color.White, modifier = Modifier.requiredSize(40.dp))
             }
         }
     }
@@ -1326,7 +1325,7 @@ private fun StackCell(
             }
             Thumbnail(top, version, wash = wash)
         }
-        Text(s.name, color = if (dim) Pc.GallerySize else Pc.GalleryText, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(top = 12.dp))
+        Text(s.name, translate = false, color = if (dim) Pc.GallerySize else Pc.GalleryText, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, modifier = Modifier.padding(top = 12.dp))
         Text("${s.artworks.size} artworks", color = Pc.GallerySize, fontSize = 10.sp)
     }
 }
@@ -1454,7 +1453,7 @@ private fun ArtworkPreview(list: List<Artwork>, version: Int, start: Int, onClos
                     contentAlignment = Alignment.Center,
                 ) {
                     Box(Modifier.size(23.5.dp).clip(CircleShape).background(PreviewClose), contentAlignment = Alignment.Center) {
-                        Icon(PcIcons.Cross, contentDescription = "Close", tint = Color.Black, modifier = Modifier.size(15.dp))
+                        Icon(PcIcons.Cross, contentDescription = UiLanguage.translate("Close"), tint = Color.Black, modifier = Modifier.size(15.dp))
                     }
                 }
                 PreviewArrow(left = true, Modifier.align(Alignment.CenterStart)) { if (index > 0) index-- }
@@ -1618,7 +1617,7 @@ private fun Thumbnail(a: Artwork, version: Int, chosen: Boolean? = null, wash: B
                     .then(if (chosen) Modifier else Modifier.border(1.dp, Color(0xFFCCCCCC), CircleShape)),
                 contentAlignment = Alignment.Center,
             ) {
-                if (chosen) Icon(PcIcons.MenuTick, contentDescription = "Picked", tint = Color.White, modifier = Modifier.size(10.dp))
+                if (chosen) Icon(PcIcons.MenuTick, contentDescription = UiLanguage.translate("Picked"), tint = Color.White, modifier = Modifier.size(10.dp))
             }
         }
     }
@@ -1764,7 +1763,7 @@ private fun SwipeButton(label: String, fill: Color, ink: Color, onClick: () -> U
 @Composable
 private fun PresetRow(name: String, label: String, profile: String, modifier: Modifier, onClick: () -> Unit) {
     Row(modifier.fillMaxWidth().clickable(onClick = onClick).padding(start = 17.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(name, color = Pc.LightText, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        Text(name, translate = false, color = Pc.LightText, fontSize = 17.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
         Chip(CanvasPreset.chip(profile))
         Chip(label, Modifier.padding(start = 4.dp))
     }

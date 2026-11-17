@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -128,7 +127,7 @@ fun TransformNumeric(vm: CanvasViewModel) {
                             Modifier.size(52.dp, 35.dp).clip(RoundedCornerShape(9.dp)).background(if (linked) LinkOn else FieldIdle).tap { linked = !linked },
                             contentAlignment = Alignment.Center,
                         ) {
-                            Icon(PcIcons.Link, contentDescription = "Link", tint = if (linked) Pc.Accent else KeyInk, modifier = Modifier.size(22.dp))
+                            Icon(PcIcons.Link, contentDescription = UiLanguage.translate("Link"), tint = if (linked) Pc.Accent else KeyInk, modifier = Modifier.size(22.dp))
                         }
                         NumberField(shown(1), chosen = field == 1) {
                             field = 1
@@ -166,7 +165,7 @@ private fun NumberField(text: String, chosen: Boolean, onClick: () -> Unit) {
 private fun NumericKey(label: String, fill: Color, width: Int, onClick: () -> Unit) {
     Box(Modifier.size(width.dp, 48.dp).clip(RoundedCornerShape(9.dp)).background(fill).tap(onClick), contentAlignment = Alignment.Center) {
         if (label == "⌫") {
-            Icon(PcIcons.Backspace, contentDescription = "Back space", tint = KeyInk, modifier = Modifier.size(22.dp))
+            Icon(PcIcons.Backspace, contentDescription = UiLanguage.translate("Back space"), tint = KeyInk, modifier = Modifier.size(22.dp))
         } else {
             Text(label, color = KeyInk, fontSize = if (label.length > 1) 15.sp else 22.sp)
         }

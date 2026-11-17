@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -126,7 +125,7 @@ private fun SavedSelections(vm: CanvasViewModel) {
     Row(Modifier.fillMaxWidth().height(40.dp).padding(start = 14.dp), verticalAlignment = Alignment.CenterVertically) {
         Text("Selections", color = MenuText, fontSize = 24.sp, fontWeight = FontWeight.Bold, letterSpacing = (-0.015).em, maxLines = 1, modifier = Modifier.weight(1f))
         Box(Modifier.size(40.dp, 36.dp).tap { vm.saveSelection() }, contentAlignment = Alignment.Center) {
-            Icon(PcIcons.Add, contentDescription = "Save new selection", tint = MenuText, modifier = Modifier.requiredSize(40.dp))
+            Icon(PcIcons.Add, contentDescription = UiLanguage.translate("Save new selection"), tint = MenuText, modifier = Modifier.requiredSize(40.dp))
         }
     }
     Spacer(Modifier.height(8.dp))

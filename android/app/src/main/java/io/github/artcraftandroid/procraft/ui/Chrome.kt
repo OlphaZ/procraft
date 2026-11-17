@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -305,10 +304,10 @@ private fun SliderPanel(vm: CanvasViewModel, which: CanvasViewModel.SliderPanel,
             // a hairline rim, as measured (about 25 over the glass)
             .border(1.dp, Pc.GlassMenuEdge, RoundedCornerShape(22.dp)),
     ) {
-        Text(
+        androidx.compose.material3.Text(
             androidx.compose.ui.text.buildAnnotatedString {
                 pushStyle(androidx.compose.ui.text.SpanStyle(fontWeight = FontWeight.Bold))
-                append(if (size) "Size" else "Opacity")
+                append(UiLanguage.translate(if (size) "Size" else "Opacity"))
                 pop()
                 append(" ${(value * 100f).roundToInt()}%")
             },

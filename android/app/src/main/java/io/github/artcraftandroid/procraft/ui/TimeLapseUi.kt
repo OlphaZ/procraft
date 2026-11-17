@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -112,7 +111,7 @@ fun TimeLapseReplay(vm: CanvasViewModel) {
     ) {
         shown?.let {
             // edge to edge, under the header
-            Image(it, contentDescription = "Time-lapse", contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
+            Image(it, contentDescription = UiLanguage.translate("Time-lapse"), contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize())
         }
         val why = if (missing) CanvasViewModel.TIME_LAPSE_MISSING.removeSuffix(".") else "The time-lapse can't be read on this device"
         val empty = if (count == 0) "Nothing recorded yet" else why.takeIf { unreadable && shown == null }

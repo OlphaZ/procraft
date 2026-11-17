@@ -42,6 +42,7 @@ class SaveToDeviceActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        io.github.artcraftandroid.procraft.ui.UiLanguage.load(this)
         if (savedInstanceState != null) return
         when {
             files.isEmpty() -> finish()
@@ -59,7 +60,7 @@ class SaveToDeviceActivity : ComponentActivity() {
         Executors.newSingleThreadExecutor().execute {
             val saved = runCatching(work).getOrDefault(false)
             runOnUiThread {
-                if (!saved) Toast.makeText(app, "Couldn't save the file", Toast.LENGTH_LONG).show()
+                if (!saved) Toast.makeText(app, io.github.artcraftandroid.procraft.ui.UiLanguage.translate("Couldn't save the file"), Toast.LENGTH_LONG).show()
                 finish()
             }
         }

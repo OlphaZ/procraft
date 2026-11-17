@@ -47,7 +47,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -145,7 +144,7 @@ fun BoxScope.QuickMenu(vm: CanvasViewModel) {
                 },
             contentAlignment = Alignment.Center,
         ) {
-            Text(vm.quickMenus.getOrNull(vm.quickMenuShown)?.name.orEmpty(), color = TitleInk, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+            Text(vm.quickMenus.getOrNull(vm.quickMenuShown)?.name.orEmpty(), translate = false, color = TitleInk, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
         }
         val slots = vm.quickMenuSlots
         slots.forEachIndexed { i, _ ->
@@ -459,7 +458,7 @@ private fun ActionPicker(
             verticalAlignment = Alignment.Top,
         ) {
             if (back != null) {
-                Icon(PcIcons.ChevronLeft, contentDescription = "Back", tint = PickerTitleInk, modifier = Modifier.size(24.dp))
+                Icon(PcIcons.ChevronLeft, contentDescription = UiLanguage.translate("Back"), tint = PickerTitleInk, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(4.dp))
             }
             Text(title, color = PickerTitleInk, fontSize = 19.3.sp, fontWeight = FontWeight.Bold, maxLines = 1)
@@ -544,7 +543,7 @@ fun BoxScope.LayerChoice(vm: CanvasViewModel) {
                     }.padding(start = 16.dp),
                     contentAlignment = Alignment.CenterStart,
                 ) {
-                    Text(l.name, color = if (l.current) Color.White else Pc.PanelTitle, fontSize = 16.sp, maxLines = 1)
+                    Text(l.name, translate = false, color = if (l.current) Color.White else Pc.PanelTitle, fontSize = 16.sp, maxLines = 1)
                 }
             }
         }

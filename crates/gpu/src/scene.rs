@@ -3,7 +3,6 @@
 
 use procraft_engine::geom::IRect;
 use procraft_engine::mesh::Mesh;
-use wgpu::util::DeviceExt;
 
 use crate::lighting::{CUBE_LEVELS, Lighting};
 use crate::{Gpu, GpuError, SelectionLook, SurroundGrid, read_texture};
@@ -64,8 +63,7 @@ pub fn material_source(gpu: &Gpu, side: u32, pixels: &[u8]) -> Option<wgpu::Text
 
 /// `side` square grey `pixels` as a texture.
 fn grey_view(gpu: &Gpu, side: u32, pixels: &[u8]) -> wgpu::TextureView {
-    let texture = gpu.device.create_texture_with_data(
-        &gpu.queue,
+    let texture = gpu.texture_with_data(
         &wgpu::TextureDescriptor {
             label: Some("material source"),
             size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: 1 },
@@ -76,7 +74,6 @@ fn grey_view(gpu: &Gpu, side: u32, pixels: &[u8]) -> wgpu::TextureView {
             usage: wgpu::TextureUsages::TEXTURE_BINDING,
             view_formats: &[],
         },
-        wgpu::util::TextureDataOrder::LayerMajor,
         pixels,
     );
     texture.create_view(&wgpu::TextureViewDescriptor::default())
@@ -591,16 +588,18 @@ impl MeshView {
         let vertices: Vec<VertexGpu> =
             mesh.vertices.iter().map(|v| VertexGpu { position: v.position, normal: v.normal, uv: v.uv }).collect();
         let indices: Vec<u32> = mesh.triangles.iter().flatten().copied().collect();
-        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("mesh vertices"),
-            contents: bytemuck::cast_slice(&vertices),
-            usage: wgpu::BufferUsages::VERTEX,
-        });
-        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("mesh indices"),
-            contents: bytemuck::cast_slice(&indices),
-            usage: wgpu::BufferUsages::INDEX,
-        });
+        let vertex_buffer = crate::canvas::buffer_init(
+            device,
+            "mesh vertices",
+            bytemuck::cast_slice(&vertices),
+            wgpu::BufferUsages::VERTEX,
+        );
+        let index_buffer = crate::canvas::buffer_init(
+            device,
+            "mesh indices",
+            bytemuck::cast_slice(&indices),
+            wgpu::BufferUsages::INDEX,
+        );
         let texture_entry = |binding, view_dimension| wgpu::BindGroupLayoutEntry {
             binding,
             visibility: wgpu::ShaderStages::FRAGMENT,
@@ -672,9 +671,8 @@ impl MeshView {
             ],
         });
         // nothing painted in a channel: the material's own value shows
-        let blank = device
-            .create_texture_with_data(
-                &gpu.queue,
+        let blank = gpu
+            .texture_with_data(
                 &wgpu::TextureDescriptor {
                     label: Some("mesh blank map"),
                     size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
@@ -685,7 +683,6 @@ impl MeshView {
                     usage: wgpu::TextureUsages::TEXTURE_BINDING,
                     view_formats: &[],
                 },
-                wgpu::util::TextureDataOrder::LayerMajor,
                 &[0, 0, 0, 0],
             )
             .create_view(&wgpu::TextureViewDescriptor::default());
@@ -727,14 +724,15 @@ impl MeshView {
             .map(|(i, p)| {
                 // the material's own colour, roughness and metalness under what is painted
                 let ([r, g, b], roughness, metallic) = mesh.surface(i);
-                let uniform = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some("mesh part"),
-                    contents: bytemuck::bytes_of(&PartUniform {
+                let uniform = crate::canvas::buffer_init(
+                    device,
+                    "mesh part",
+                    bytemuck::bytes_of(&PartUniform {
                         base: [r, g, b, 1.0],
                         material: [roughness, metallic, 0.0, 0.0],
                     }),
-                    usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-                });
+                    wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                );
                 // nothing painted yet: its base colour shows through a clear albedo
                 let views = [blank.clone(), blank.clone(), blank.clone(), blank.clone(), blank.clone()];
                 let bind = part_bind(device, &part_layout, &sampler, &views, &uniform);
@@ -852,7 +850,7 @@ impl MeshView {
     /// textures' own colours (for a thumbnail). Waits for the GPU.
     pub fn picture(&mut self, gpu: &Gpu, width: u32, height: u32, clear: [f64; 4]) -> Result<Vec<u8>, GpuError> {
         let (width, height) = (width.max(1), height.max(1));
-        let target = gpu.device.create_texture(&wgpu::TextureDescriptor {
+        let target = gpu.texture(&wgpu::TextureDescriptor {
             label: Some("model picture"),
             size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
             mip_level_count: 1,
@@ -926,7 +924,7 @@ impl MeshView {
         }
         // its own texture, made the first time and shown from now on in place of any other
         let texture = p.texture.get_or_insert_with(|| {
-            gpu.device.create_texture(&wgpu::TextureDescriptor {
+            gpu.texture(&wgpu::TextureDescriptor {
                 label: Some("mesh albedo"),
                 size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: 1 },
                 mip_level_count: 1,
@@ -940,7 +938,7 @@ impl MeshView {
         p.views[0] = texture.create_view(&wgpu::TextureViewDescriptor::default());
         p.mips = None;
         p.bind = part_bind(&gpu.device, &self.part_layout, &self.sampler, &p.views, &p.uniform);
-        gpu.queue.write_texture(
+        gpu.write_texture(
             wgpu::TexelCopyTextureInfo {
                 texture,
                 mip_level: 0,
@@ -983,8 +981,7 @@ impl MeshView {
         };
         let texture =
             map.filter(|(side, rgba)| *side > 0 && rgba.len() == (*side as usize).pow(2) * 4).map(|(side, rgba)| {
-                gpu.device.create_texture_with_data(
-                    &gpu.queue,
+                gpu.texture_with_data(
                     &wgpu::TextureDescriptor {
                         label: Some("mesh surface map"),
                         size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: 1 },
@@ -995,7 +992,6 @@ impl MeshView {
                         usage: wgpu::TextureUsages::TEXTURE_BINDING,
                         view_formats: &[],
                     },
-                    wgpu::util::TextureDataOrder::LayerMajor,
                     rgba,
                 )
             });
@@ -1027,7 +1023,7 @@ impl MeshView {
         let Some(p) = self.parts.get_mut(part) else { return };
         if p.mips.is_none() {
             let levels = u32::BITS - side.max(1).leading_zeros();
-            let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            let texture = gpu.texture(&wgpu::TextureDescriptor {
                 label: Some("albedo levels"),
                 size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: 1 },
                 mip_level_count: levels,
@@ -1366,7 +1362,7 @@ impl MeshView {
         let at = if let Some(i) = found {
             i
         } else {
-            let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            let texture = gpu.texture(&wgpu::TextureDescriptor {
                 label: Some("mesh depth"),
                 size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
                 mip_level_count: 1,
@@ -1774,7 +1770,7 @@ impl MeshView {
         for i in 0..self.parts.len() {
             hiding.extend(self.shown_ranges(i).into_iter().flat_map(|r| without(r, &painted)));
         }
-        let depth = gpu.device.create_texture(&wgpu::TextureDescriptor {
+        let depth = gpu.texture(&wgpu::TextureDescriptor {
             label: Some("seen depth"),
             size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
             mip_level_count: 1,
@@ -1883,7 +1879,7 @@ impl MeshView {
         let (width, height) = (width.max(1), height.max(1));
         let side = self.texture_size;
         let make = |label, format, usage, w, h| {
-            gpu.device.create_texture(&wgpu::TextureDescriptor {
+            gpu.texture(&wgpu::TextureDescriptor {
                 label: Some(label),
                 size: wgpu::Extent3d { width: w, height: h, depth_or_array_layers: 1 },
                 mip_level_count: 1,
@@ -1896,7 +1892,7 @@ impl MeshView {
         };
         let usage = wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST;
         let source = make("screen coverage", wgpu::TextureFormat::R8Unorm, usage, width, height);
-        gpu.queue.write_texture(
+        gpu.write_texture(
             source.as_image_copy(),
             coverage,
             wgpu::TexelCopyBufferLayout { offset: 0, bytes_per_row: Some(width), rows_per_image: None },
@@ -1953,7 +1949,7 @@ impl MeshView {
         let stale = projector.screen.as_ref().is_none_or(|(t, _, _)| t.width() != width || t.height() != height);
         if stale {
             let make = |label, format, usage| {
-                gpu.device.create_texture(&wgpu::TextureDescriptor {
+                gpu.texture(&wgpu::TextureDescriptor {
                     label: Some(label),
                     size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
                     mip_level_count: 1,
@@ -2257,7 +2253,7 @@ impl MeshView {
         f.read.slice(..).map_async(wgpu::MapMode::Read, move |r| {
             let _ = tx.send(r);
         });
-        gpu.device.poll(wgpu::PollType::wait_indefinitely()).ok()?;
+        gpu.wait().ok()?;
         rx.recv().ok()?.ok()?;
         let words: Vec<u32> = {
             let mapped = f.read.slice(..).get_mapped_range().ok()?;
@@ -2298,7 +2294,7 @@ impl MeshView {
         let side = self.texture_size;
         let projector = self.projector.as_mut()?;
         if projector.grain.is_none() {
-            let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            let texture = gpu.texture(&wgpu::TextureDescriptor {
                 label: Some("stroke grain"),
                 size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: gpu.array_layers_least() },
                 mip_level_count: 1,
@@ -2407,7 +2403,7 @@ impl MeshView {
         let side = self.texture_size;
         let projector = self.projector.get_or_insert_with(|| Projector::new(gpu));
         let make_square = |label, format| {
-            let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            let texture = gpu.texture(&wgpu::TextureDescriptor {
                 label: Some(label),
                 size: wgpu::Extent3d { width: side, height: side, depth_or_array_layers: 1 },
                 mip_level_count: 1,
@@ -2660,7 +2656,7 @@ impl FootprintMarks {
             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        let marks = device.create_texture(&wgpu::TextureDescriptor {
+        let marks = gpu.texture(&wgpu::TextureDescriptor {
             label: Some("stroke footprint marks"),
             size: wgpu::Extent3d { width: FOOTPRINT_TILES, height: FOOTPRINT_TILES, depth_or_array_layers: 1 },
             mip_level_count: 1,
@@ -2717,7 +2713,8 @@ impl FootprintMarks {
             pass.set_bind_group(0, &bind, &[]);
             pass.draw(0..3, 0..1);
         }
-        encoder.copy_texture_to_buffer(
+        gpu.copy_texture_to_buffer(
+            &mut encoder,
             self.marks.as_image_copy(),
             wgpu::TexelCopyBufferInfo {
                 buffer: &self.read,
@@ -2734,7 +2731,7 @@ impl FootprintMarks {
         self.read.slice(..).map_async(wgpu::MapMode::Read, move |r| {
             let _ = tx.send(r);
         });
-        gpu.device.poll(wgpu::PollType::wait_indefinitely()).ok()?;
+        gpu.wait().ok()?;
         rx.recv().ok()?.ok()?;
         let mut words = vec![0u32; (FOOTPRINT_TILES * FOOTPRINT_TILES).div_ceil(32) as usize];
         {
@@ -2940,8 +2937,7 @@ impl Projector {
                 texture_entry(3),
             ],
         });
-        let everywhere = device.create_texture_with_data(
-            &gpu.queue,
+        let everywhere = gpu.texture_with_data(
             &wgpu::TextureDescriptor {
                 label: Some("reach everywhere"),
                 size: wgpu::Extent3d { width: 1, height: 1, depth_or_array_layers: 1 },
@@ -2952,7 +2948,6 @@ impl Projector {
                 usage: wgpu::TextureUsages::TEXTURE_BINDING,
                 view_formats: &[],
             },
-            wgpu::util::TextureDataOrder::LayerMajor,
             &[255],
         );
         let everywhere = everywhere.create_view(&wgpu::TextureViewDescriptor::default());
@@ -3277,9 +3272,11 @@ impl Projector {
     }
 }
 
-/// The pixels round a point, one to spare each way.
+/// The pixels round a point, one to spare each way (a point past the integers' reach, as texture
+/// coordinates far out of the texture put one, kept at its edge).
 fn pixels_round(x: f32, y: f32) -> IRect {
-    IRect::new(x.floor() as i32 - 1, y.floor() as i32 - 1, x.ceil() as i32 + 1, y.ceil() as i32 + 1)
+    let (low, high) = (|v: f32| (v.floor() as i32).saturating_sub(1), |v: f32| (v.ceil() as i32).saturating_add(1));
+    IRect::new(low(x), low(y), high(x), high(y))
 }
 
 /// `m` (columns) applied to point `p`: clip coordinates.
@@ -3382,6 +3379,15 @@ fn mul(a: [[f32; 4]; 4], b: [[f32; 4]; 4]) -> [[f32; 4]; 4] {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_point_past_the_integers_reach_rounds_to_their_edge() {
+        let at = |r: IRect| (r.x0, r.y0, r.x1, r.y1);
+        assert_eq!(at(pixels_round(2.5, 3.0)), (1, 2, 4, 4));
+        // texture coordinates of ±1e30 (a model's file may hold them), and none at all
+        assert_eq!(at(pixels_round(1e30, -1e30)), (i32::MAX - 1, i32::MIN, i32::MAX, i32::MIN + 1));
+        assert_eq!(at(pixels_round(f32::NAN, f32::INFINITY)), (-1, i32::MAX - 1, 1, i32::MAX));
+    }
 
     #[test]
     fn marked_tiles_become_rectangles_joined_down_their_runs() {

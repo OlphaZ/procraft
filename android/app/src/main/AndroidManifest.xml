@@ -99,6 +99,9 @@
                 <data android:pathSuffix=".vbr" />
                 <data android:pathPattern=".*\\.vbr" />
                 <data android:pathPattern=".*\\..*\\.vbr" />
+                <data android:pathSuffix=".bundle" />
+                <data android:pathPattern=".*\\.bundle" />
+                <data android:pathPattern=".*\\..*\\.bundle" />
                 <data android:pathSuffix=".aco" />
                 <data android:pathPattern=".*\\.aco" />
                 <data android:pathPattern=".*\\..*\\.aco" />
@@ -162,6 +165,9 @@
                 <data android:pathSuffix=".vbr" />
                 <data android:pathPattern=".*\\.vbr" />
                 <data android:pathPattern=".*\\..*\\.vbr" />
+                <data android:pathSuffix=".bundle" />
+                <data android:pathPattern=".*\\.bundle" />
+                <data android:pathPattern=".*\\..*\\.bundle" />
                 <data android:pathSuffix=".aco" />
                 <data android:pathPattern=".*\\.aco" />
                 <data android:pathPattern=".*\\..*\\.aco" />

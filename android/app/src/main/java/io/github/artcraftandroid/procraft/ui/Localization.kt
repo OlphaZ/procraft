@@ -48,6 +48,12 @@ object UiLanguage {
     }
 
     private val translations = mapOf(
+        "Choose" to "选择",
+        "Delete this picture?" to "删除这张图片？",
+        "Filter Layer" to "滤镜图层",
+        "It goes from the plugin's textures." to "来自此插件提供的纹理。",
+        "Save Layout" to "保存布局",
+        "Tool Belt" to "工具栏",
         "Couldn't save to Gallery without storage access" to "无法保存到图库：未授予存储权限",
         "Couldn't save to Gallery" to "无法保存到图库",
         "Couldn't save the file" to "无法保存文件",

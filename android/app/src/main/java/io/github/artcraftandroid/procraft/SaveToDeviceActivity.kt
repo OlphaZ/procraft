@@ -58,7 +58,10 @@ class SaveToDeviceActivity : ComponentActivity() {
     private fun write(work: () -> Boolean) {
         val app = applicationContext
         Executors.newSingleThreadExecutor().execute {
-            val saved = runCatching(work).getOrDefault(false)
+            val saved = runCatching(work)
+                .onFailure { AppLog.e("ProCraft", "saving ${files.joinToString { "${it.name} (${it.length()} bytes)" }} to the device", it) }
+                .getOrDefault(false)
+            if (!saved) AppLog.w("ProCraft", "${files.joinToString { it.name }} ($mime) wasn't saved to the device")
             runOnUiThread {
                 if (!saved) Toast.makeText(app, io.github.artcraftandroid.procraft.ui.UiLanguage.translate("Couldn't save the file"), Toast.LENGTH_LONG).show()
                 finish()
